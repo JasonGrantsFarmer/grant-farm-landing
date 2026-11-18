@@ -1,0 +1,523 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Hello from Jason</title>
+<meta name="description" content="Jason helps small to medium US nonprofits with grants and donor retention.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@400&family=Manrope:wght@400;500&display=swap">
+<style>
+  /* Layout: full-screen night valley of glowing flowers; a centred condensed headline floats over it, nav on top, sound toggle bottom right */
+  :root {
+    --u: min(calc(100vw / 1600), calc(100vh / 900));
+    --cream: #f5efe2;
+    --ink: #151510;
+    --night-top: #0b1020;
+    --night-bottom: #000000;
+    --rule: rgba(245, 239, 226, 0.45);
+    --vig: 0.55;
+    --font-display: "Antonio", "Arial Narrow", sans-serif;
+    --font-body: "Manrope", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { min-height: 100%; overflow-x: hidden; }
+  body {
+    margin: 0;
+    background: radial-gradient(120% 80% at 50% 0%, var(--night-top), var(--night-bottom) 70%);
+    background-color: var(--night-bottom);
+    color: var(--cream);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+
+  #valley { position: fixed; inset: 0; }
+  #valley canvas { display: block; width: 100% !important; height: 100% !important; }
+  .vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(ellipse at 50% 55%, transparent calc(70% - var(--vig) * 30%), rgba(0,0,0,0.85) 100%);
+  }
+
+  .ui { position: relative; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 1.6s ease; }
+  .ui.on { opacity: 1; }
+  .ui a, .ui button { pointer-events: auto; }
+
+  header {
+    position: fixed; left: 0; right: 0; top: 0; z-index: 4;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: max(calc(24 * var(--u)), env(safe-area-inset-top, 0px)) max(calc(44 * var(--u)), 16px, env(safe-area-inset-right, 0px)) calc(24 * var(--u)) max(calc(44 * var(--u)), 16px, env(safe-area-inset-left, 0px));
+    transition: background 0.5s ease;
+  }
+  header.scrolled { background: linear-gradient(to bottom, rgba(3,5,12,0.85), rgba(3,5,12,0)); }
+  .nav { display: flex; align-items: center; gap: calc(30 * var(--u)); }
+  .nav .link { font-size: calc(14.5 * var(--u)); font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; transition: opacity 0.25s; }
+  .nav .link:hover { opacity: 1; }
+
+  .intro { position: relative; height: 100vh; height: 100svh; }
+  .logo { font-size: calc(26 * var(--u)); font-weight: 500; letter-spacing: -0.02em; }
+  .pill {
+    display: inline-flex; align-items: center;
+    height: calc(46 * var(--u)); padding: 0 calc(26 * var(--u));
+    border-radius: 99px; background: var(--cream); color: var(--ink);
+    font-size: calc(14.5 * var(--u)); font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    transition: transform 0.25s;
+  }
+  .pill:hover { transform: translateY(-1px); }
+
+  .hero {
+    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-46%);
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding-inline: 16px;
+  }
+  h1 {
+    margin: 0;
+    font: 400 calc(158 * var(--u)) / 0.92 var(--font-display);
+    letter-spacing: -0.012em; white-space: nowrap;
+    text-shadow: 0 0 40px rgba(0,0,0,0.35);
+  }
+  .cap { margin: calc(48 * var(--u)) 0 0; font-size: calc(20 * var(--u)); line-height: 1.3; text-shadow: 0 0 20px rgba(0,0,0,0.6); }
+  .go {
+    display: grid; place-items: center;
+    margin-top: calc(34 * var(--u));
+    width: calc(58 * var(--u)); height: calc(58 * var(--u));
+    border: 1.5px solid var(--cream); border-radius: 50%;
+    transition: background 0.3s, color 0.3s;
+  }
+  .go:hover, .go[aria-pressed="true"] { background: var(--cream); color: var(--ink); }
+  .go svg { width: calc(22 * var(--u)); height: calc(22 * var(--u)); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+  .corner {
+    position: absolute; right: max(calc(44 * var(--u)), 16px); bottom: max(calc(44 * var(--u)), env(safe-area-inset-bottom, 0px));
+    display: flex; align-items: center; gap: calc(18 * var(--u));
+    font-size: calc(12.5 * var(--u)); font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .corner i { width: 1px; height: calc(26 * var(--u)); background: var(--rule); }
+  .sound { display: grid; place-items: center; width: calc(28 * var(--u)); height: calc(28 * var(--u)); }
+  .sound svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .sound .w, .sound .x { transition: opacity 0.3s; }
+  .sound[aria-pressed="false"] .w { opacity: 0; }
+  .sound[aria-pressed="true"] .x { opacity: 0; }
+
+  .loader { position: fixed; inset: 0; z-index: 3; display: grid; place-items: center; background: var(--night-bottom); transition: opacity 1s ease; pointer-events: none; }
+  .loader.gone { opacity: 0; }
+  .loader span { width: calc(9 * var(--u)); height: calc(9 * var(--u)); min-width: 6px; min-height: 6px; border-radius: 50%; background: var(--cream); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform: scale(0.4); opacity: 0.4; } }
+
+  /* About: rises over the valley on a deepening night wash so text stays readable */
+  .about {
+    position: relative; pointer-events: auto;
+    padding: calc(170 * var(--u)) max(calc(120 * var(--u)), 16px) calc(150 * var(--u));
+    background: linear-gradient(to bottom, rgba(3,5,12,0) 0%, rgba(3,5,12,0.78) 22%, rgba(3,5,12,0.9) 100%);
+  }
+  .about-inner { max-width: calc(1360 * var(--u)); margin: 0 auto; }
+  .eyebrow {
+    display: flex; align-items: center; gap: calc(18 * var(--u));
+    margin: 0 0 calc(40 * var(--u));
+    font-size: calc(13 * var(--u)); font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.8;
+  }
+  .eyebrow::after { content: ""; flex: 0 0 calc(80 * var(--u)); height: 1px; background: var(--rule); }
+  .about-top { display: grid; grid-template-columns: 1.15fr 1fr; gap: calc(90 * var(--u)); align-items: end; }
+  h2 {
+    margin: 0;
+    font: 400 calc(118 * var(--u)) / 0.95 var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  h2 em { font-style: normal; color: #ffcf6b; }
+  .lead { margin: 0 0 calc(22 * var(--u)); font-size: calc(23 * var(--u)); line-height: 1.5; }
+  .body { margin: 0; font-size: calc(17 * var(--u)); line-height: 1.7; opacity: 0.78; }
+
+  .pillars {
+    list-style: none; margin: calc(110 * var(--u)) 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(48 * var(--u));
+  }
+  .pillars li { padding-top: calc(28 * var(--u)); border-top: 1px solid var(--rule); }
+  .pillars .n { display: block; margin-bottom: calc(26 * var(--u)); font-size: calc(13 * var(--u)); letter-spacing: 0.22em; opacity: 0.6; }
+  .pillars h3 { margin: 0 0 calc(14 * var(--u)); font: 400 calc(40 * var(--u)) / 1 var(--font-display); letter-spacing: 0.005em; text-transform: uppercase; }
+  .pillars p { margin: 0; font-size: calc(16.5 * var(--u)); line-height: 1.65; opacity: 0.78; }
+
+  .about-end {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    margin-top: calc(120 * var(--u)); padding-top: calc(40 * var(--u)); border-top: 1px solid var(--rule);
+  }
+  .about-end p { margin: 0; font: 400 calc(44 * var(--u)) / 1.05 var(--font-display); }
+
+  .rise { opacity: 0; transform: translateY(28px); transition: opacity 1s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+  .rise.in { opacity: 1; transform: none; }
+  .pillars li.rise:nth-child(2) { transition-delay: 0.12s; }
+  .pillars li.rise:nth-child(3) { transition-delay: 0.24s; }
+
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+
+  @media (max-width: 820px) {
+    :root { --u: 1px; }
+    header { padding: max(18px, env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) 0 max(18px, env(safe-area-inset-left, 0px)); }
+    .logo { font-size: 20px; }
+    .pill { height: 40px; padding: 0 18px; font-size: 12px; }
+    .hero { padding-inline: 20px; }
+    h1 { font-size: clamp(64px, 19vw, 96px); white-space: normal; }
+    .cap { font-size: 17px; }
+    .corner { left: 20px; right: 20px; bottom: max(30px, env(safe-area-inset-bottom, 0px)); justify-content: center; font-size: 11px; }
+    .nav { gap: 16px; }
+    .nav .link { font-size: 12px; }
+    .about { padding: 120px 20px 90px; }
+    .eyebrow { margin-bottom: 26px; font-size: 11px; }
+    .eyebrow::after { flex-basis: 48px; }
+    .about-top { grid-template-columns: 1fr; gap: 32px; }
+    h2 { font-size: clamp(52px, 15vw, 76px); }
+    .lead { font-size: 19px; }
+    .body { font-size: 16px; }
+    .pillars { grid-template-columns: 1fr; gap: 36px; margin-top: 64px; }
+    .pillars .n { margin-bottom: 16px; font-size: 11px; }
+    .pillars h3 { font-size: 32px; }
+    .pillars p { font-size: 16px; }
+    .about-end { margin-top: 64px; padding-top: 32px; }
+    .about-end p { font-size: 34px; }
+  }
+  @media (max-width: 380px) { .nav .link { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .loader span { animation: none; }
+    .rise { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<div id="valley" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="ui" id="ui">
+  <header id="top">
+    <a class="logo" href="#">The Grant Farm</a>
+    <nav class="nav">
+      <a class="link" href="#about">About</a>
+      <a class="pill" href="#">Let’s talk</a>
+    </nav>
+  </header>
+  <div class="intro">
+  <section class="hero">
+    <h1>Hello, I’m Jason.</h1>
+    <p class="cap">I help small to medium US nonprofits<br>with grants and donor retention.</p>
+    <button class="go" id="go" aria-pressed="false" aria-label="Pause the valley">
+      <svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+    </button>
+  </section>
+  <div class="corner">
+    <span>Scroll to wander</span><i></i>
+    <button class="sound" id="sound" aria-pressed="false" aria-label="Ambient sound">
+      <svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5Z"/><path class="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="m16 10 4 4m0-4-4 4"/></svg>
+    </button>
+  </div>
+  </div>
+
+  <section class="about" id="about" aria-labelledby="about-title">
+    <div class="about-inner">
+      <p class="eyebrow rise">About</p>
+      <div class="about-top">
+        <h2 id="about-title" class="rise">Funding is grown,<br><em>not found.</em></h2>
+        <div class="rise">
+          <p class="lead">Most nonprofits I work with don’t have a development department. They have a director who’s also writing grant applications at 11pm.</p>
+          <p class="body">I join as the part of your team that keeps funding coming in and keeps donors coming back. You work with me directly, from the first list of possible funders to the final report, so nothing gets lost in a handoff and every proposal still sounds like you.</p>
+        </div>
+      </div>
+
+      <ul class="pillars">
+        <li class="rise">
+          <span class="n">01</span>
+          <h3>Grants</h3>
+          <p>Finding funders who fit your mission, writing proposals that make the case clearly, and sending reports on time so each renewal is easier than the last.</p>
+        </li>
+        <li class="rise">
+          <span class="n">02</span>
+          <h3>Donor retention</h3>
+          <p>Thank-yous, updates and a stewardship plan that turn first-time givers into people who give again next year, and the year after.</p>
+        </li>
+        <li class="rise">
+          <span class="n">03</span>
+          <h3>Working together</h3>
+          <p>A clear scope, plain language and a calendar you can see. I work around your team’s schedule, not the other way round.</p>
+        </li>
+      </ul>
+
+      <div class="about-end rise">
+        <p>Planting season is year-round.</p>
+        <a class="pill" href="#">Let’s talk</a>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="loader" id="loader"><span></span></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const ui = document.getElementById('ui');
+  const loader = document.getElementById('loader');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reveal = () => { loader.classList.add('gone'); setTimeout(() => ui.classList.add('on'), 700); };
+
+  /* ---------- Page scroll: header wash + About reveal ---------- */
+  const header = document.getElementById('top');
+  const onScroll = () => header.classList.toggle('scrolled', scrollY > innerHeight * 0.4);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const risers = document.querySelectorAll('.rise');
+  if ('IntersectionObserver' in window && !reduced) {
+    const io = new IntersectionObserver(entries => entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    }), { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    risers.forEach(el => io.observe(el));
+  } else {
+    risers.forEach(el => el.classList.add('in'));
+  }
+
+  /* ---------- Ambient sound (generated, starts muted) ---------- */
+  let ac = null, master = null, filter = null, playing = false;
+  function initAudio() {
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain(); master.gain.value = 0;
+    filter = ac.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 1400;
+    filter.connect(master); master.connect(ac.destination);
+    [110, 164.81, 220, 277.18, 329.63].forEach((f, i) => {
+      const o = ac.createOscillator(); o.type = i % 2 ? 'sine' : 'triangle';
+      o.frequency.value = f; o.detune.value = (i - 2) * 5;
+      const g = ac.createGain(); g.gain.value = 0.05;
+      const lfo = ac.createOscillator(); lfo.frequency.value = 0.04 + i * 0.027;
+      const lg = ac.createGain(); lg.gain.value = 0.035;
+      lfo.connect(lg); lg.connect(g.gain); o.connect(g); g.connect(filter);
+      o.start(); lfo.start();
+    });
+  }
+  const sound = document.getElementById('sound');
+  sound.addEventListener('click', () => {
+    try {
+      if (!ac) initAudio();
+      if (ac.state === 'suspended') ac.resume();
+      playing = !playing;
+      master.gain.setTargetAtTime(playing ? 0.45 : 0, ac.currentTime, 0.6);
+      sound.setAttribute('aria-pressed', String(playing));
+    } catch (e) { /* audio unavailable */ }
+  });
+  const muffle = on => { if (filter) filter.frequency.setTargetAtTime(on ? 280 : 1400, ac.currentTime, 0.4); };
+
+  /* ---------- Valley ---------- */
+  if (typeof THREE === 'undefined') { reveal(); return; }
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
+  } catch (e) { reveal(); return; }
+
+  const wrap = document.getElementById('valley');
+  const pr = Math.min(window.devicePixelRatio || 1, 2);
+  renderer.setPixelRatio(pr);
+  renderer.setClearColor(0x000000, 0);
+  wrap.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 300);
+  camera.position.set(0, 3.4, 12);
+
+  const L = 130;
+  const TAU = Math.PI * 2;
+  const height = (x, z) =>
+    0.0065 * x * x +
+    1.3 * Math.sin(x * 0.13 + Math.cos(z * TAU * 2 / L) * 2.0) +
+    0.9 * Math.cos(z * TAU * 3 / L) - 1.2;
+
+  const small = Math.min(innerWidth, innerHeight) < 600;
+  const FLOWERS = small ? 9000 : 16000;
+  const LEAVES = small ? 4000 : 7000;
+  const DUST = small ? 500 : 900;
+  const total = FLOWERS + LEAVES + DUST;
+
+  const pos = new Float32Array(total * 3);
+  const col = new Float32Array(total * 3);
+  const size = new Float32Array(total);
+  const seed = new Float32Array(total);
+  const type = new Float32Array(total);
+
+  const palette = ['#f5efe2', '#ff9ec7', '#ffcf6b', '#7fe3d6', '#b7a4ff', '#ffb38a'].map(c => new THREE.Color(c));
+  const leafCol = [new THREE.Color('#2f7d55'), new THREE.Color('#3f9a6a'), new THREE.Color('#1f5f45')];
+  const dustCol = new THREE.Color('#fff4d6');
+
+  for (let i = 0; i < total; i++) {
+    const x = (Math.random() - 0.5) * 2 * (Math.random() < 0.7 ? 28 : 55);
+    const z = Math.random() * L;
+    let y = height(x, z);
+    let c, s, t;
+    if (i < FLOWERS) {
+      t = 0; c = palette[(Math.random() * palette.length) | 0]; s = 0.25 + Math.random() * 0.35;
+      y += 0.2 + Math.random() * 0.5;
+    } else if (i < FLOWERS + LEAVES) {
+      t = 1; c = leafCol[(Math.random() * leafCol.length) | 0]; s = 0.3 + Math.random() * 0.3;
+    } else {
+      t = 2; c = dustCol; s = 0.06 + Math.random() * 0.08;
+      y += 1 + Math.random() * 9;
+    }
+    pos[i * 3] = x; pos[i * 3 + 1] = y; pos[i * 3 + 2] = z;
+    col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+    size[i] = s; seed[i] = Math.random(); type[i] = t;
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+  geo.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+  geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
+  geo.setAttribute('aType', new THREE.BufferAttribute(type, 1));
+
+  const uniforms = {
+    uTravel: { value: 0 }, uL: { value: L }, uTime: { value: 0 },
+    uScale: { value: 1 }, uDisperse: { value: 0 },
+    uMouse: { value: new THREE.Vector2(9, 9) }, uAspect: { value: 1 }
+  };
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `
+      uniform float uTravel, uL, uTime, uScale, uDisperse, uAspect;
+      uniform vec2 uMouse;
+      attribute vec3 aColor; attribute float aSize, aSeed, aType;
+      varying vec3 vColor; varying float vAlpha, vGlow, vSeed, vType;
+      void main() {
+        vec3 p = position;
+        p.z = mod(p.z + uTravel, uL) - uL + 10.0;
+        float s1 = fract(aSeed * 13.7), s2 = fract(aSeed * 7.31);
+        vec3 dir = normalize(vec3(sin(aSeed * 6.2831), 0.5 + s2, cos(aSeed * 6.2831)));
+        p += dir * uDisperse * (3.0 + 7.0 * s1);
+        p.y += sin(uTime * (0.6 + s2) + aSeed * 40.0) * (aType > 1.5 ? 0.35 : 0.06);
+        p.x += aType > 1.5 ? sin(uTime * 0.3 + aSeed * 20.0) * 0.4 : 0.0;
+
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        vec4 clip = projectionMatrix * mv;
+        vec2 ndc = clip.xy / clip.w;
+        vec2 d = ndc - uMouse; d.x *= uAspect;
+        float dist = length(d);
+        float push = smoothstep(0.32, 0.0, dist);
+        vec2 off = (d / max(dist, 1e-4)) * push * 0.09; off.x /= uAspect;
+        clip.xy += off * clip.w;
+        gl_Position = clip;
+
+        float depth = -mv.z;
+        float bloom = aType < 0.5 ? smoothstep(95.0, 18.0, depth)
+                    : aType < 1.5 ? smoothstep(40.0, 80.0, depth) * 0.6 + 0.4
+                    : 1.0;
+        float sz = aSize * (0.2 + 0.8 * bloom) * (1.0 + uDisperse * 0.3);
+        gl_PointSize = min(sz * uScale / max(depth, 0.5), 90.0);
+
+        vAlpha = (1.0 - smoothstep(70.0, L_FADE, depth)) * smoothstep(0.8, 4.0, depth);
+        vGlow = push;
+        vColor = aColor;
+        vSeed = aSeed;
+        vType = aType;
+      }`.replace('L_FADE', (L - 12).toFixed(1)),
+    fragmentShader: `
+      varying vec3 vColor; varying float vAlpha, vGlow, vSeed, vType;
+      void main() {
+        vec2 uv = gl_PointCoord * 2.0 - 1.0;
+        float r = length(uv);
+        float a = atan(uv.y, uv.x);
+        vec3 c; float alpha;
+        if (vType < 0.5) {
+          float petals = 0.6 + 0.32 * cos(a * 5.0 + vSeed * 6.2831);
+          float shape = smoothstep(petals, petals - 0.22, r);
+          float core = smoothstep(0.22, 0.0, r);
+          float halo = exp(-r * r * 3.5) * 0.35;
+          c = vColor * (shape * 0.85 + halo) + vec3(1.0, 0.93, 0.75) * core;
+          alpha = shape * 0.7 + halo + core * 0.6;
+        } else if (vType < 1.5) {
+          vec2 q = vec2(uv.x * 2.2, uv.y);
+          float rot = vSeed * 6.2831;
+          q = mat2(cos(rot), -sin(rot), sin(rot), cos(rot)) * uv; q.x *= 2.4;
+          float shape = smoothstep(1.0, 0.6, length(q));
+          c = vColor * shape;
+          alpha = shape * 0.55;
+        } else {
+          float g = exp(-r * r * 6.0);
+          c = vColor * g; alpha = g * 0.8;
+        }
+        c *= 1.0 + vGlow * 1.8;
+        float k = alpha * vAlpha;
+        if (k < 0.003) discard;
+        gl_FragColor = vec4(c * vAlpha, k);
+      }`
+  });
+
+  const points = new THREE.Points(geo, mat);
+  points.frustumCulled = false;
+  scene.add(points);
+
+  function resize() {
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    uniforms.uAspect.value = w / h;
+    uniforms.uScale.value = h * pr * 0.75;
+  }
+  addEventListener('resize', resize); resize();
+
+  /* ---------- Input ---------- */
+  const mouse = { x: 0, y: 0, tx: 0, ty: 0, inside: false };
+  addEventListener('pointermove', e => {
+    mouse.tx = (e.clientX / innerWidth) * 2 - 1;
+    mouse.ty = -(e.clientY / innerHeight) * 2 + 1;
+    mouse.inside = true;
+  });
+  document.addEventListener('pointerleave', () => { mouse.inside = false; });
+
+  let impulse = 0;
+  addEventListener('wheel', e => { impulse = Math.max(-8, Math.min(30, impulse + e.deltaY * 0.012)); }, { passive: true });
+  let lastTouch = null;
+  addEventListener('touchstart', e => { lastTouch = e.touches[0].clientY; }, { passive: true });
+  addEventListener('touchmove', e => {
+    const y = e.touches[0].clientY;
+    if (lastTouch !== null) impulse = Math.max(-8, Math.min(30, impulse + (lastTouch - y) * 0.012 * 20 * 0.1));
+    lastTouch = y;
+  }, { passive: true });
+  addEventListener('touchend', () => { lastTouch = null; });
+
+  let hold = false, hovering = false;
+  const go = document.getElementById('go');
+  const setHold = () => muffle(hold || hovering);
+  go.addEventListener('pointerenter', () => { hovering = true; setHold(); });
+  go.addEventListener('pointerleave', () => { hovering = false; setHold(); });
+  go.addEventListener('click', () => {
+    hold = !hold;
+    go.setAttribute('aria-pressed', String(hold));
+    go.setAttribute('aria-label', hold ? 'Resume the valley' : 'Pause the valley');
+    setHold();
+  });
+
+  /* ---------- Loop ---------- */
+  const root = document.documentElement;
+  let travel = 0, speedScale = 1, disperse = 0, last = performance.now(), first = true;
+  const idle = reduced ? 0 : 1.6;
+
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
+    const still = hold || hovering;
+    speedScale += ((still ? 0 : 1) - speedScale) * Math.min(1, dt * 2.2);
+    disperse += ((still ? 1 : 0) - disperse) * Math.min(1, dt * 1.6);
+    impulse *= Math.pow(0.12, dt);
+
+    const vel = (idle + impulse) * speedScale;
+    travel += vel * dt;
+
+    mouse.x += ((mouse.inside ? mouse.tx : 0) - mouse.x) * Math.min(1, dt * 4);
+    mouse.y += ((mouse.inside ? mouse.ty : 0) - mouse.y) * Math.min(1, dt * 4);
+    uniforms.uMouse.value.set(mouse.inside ? mouse.tx : 9, mouse.inside ? mouse.ty : 9);
+
+    camera.position.x = Math.sin(travel * 0.025) * 2.2;
+    camera.rotation.set(-0.13 + mouse.y * 0.045, -mouse.x * 0.07 + Math.sin(travel * 0.025) * -0.05, 0);
+
+    uniforms.uTravel.value = travel;
+    uniforms.uTime.value = reduced ? 0 : now / 1000;
+    uniforms.uDisperse.value = disperse;
+
+    root.style.setProperty('--vig', Math.min(1, 0.45 + Math.abs(vel) * 0.03).toFixed(3));
+
+    renderer.render(scene, camera);
+    if (first) { first = false; setTimeout(reveal, 400); }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
