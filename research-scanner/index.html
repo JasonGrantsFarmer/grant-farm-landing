@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Grant Farm Research Scanner</title>
+  <meta name="description" content="What the Grant Farm Research Scanner is, how it identifies itself, and how to contact The Grant Farm.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --night: #0b1020;
+      --panel: #151c30;
+      --cream: #f5efe2;
+      --accent: #ffcf6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--night);
+      color: var(--cream);
+      font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.6;
+    }
+    main {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 3rem 1.25rem 4rem;
+    }
+    h1, h2 { line-height: 1.25; }
+    h1 { margin: 0 0 0.5rem; font-size: 2rem; }
+    h2 { margin: 2.25rem 0 0.5rem; font-size: 1.25rem; }
+    li + li { margin-top: 0.5rem; }
+    a { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    code {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 0.95em;
+      overflow-wrap: anywhere;
+    }
+    pre {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: var(--panel);
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Grant Farm Research Scanner</h1>
+    <p><strong>Operated by The Grant Farm</strong></p>
+
+    <p>The Grant Farm Research Scanner is a developing research tool designed to help The Grant Farm conduct preliminary research on publicly available information published by nonprofit organizations. <strong>It is not yet in use on outside websites.</strong></p>
+
+    <p>It is intended to support our paid diagnostics, used only after a client's deposit is in, and test scans we authorize to check accuracy. It is not for screening prospects.</p>
+
+    <h2>What does the scanner do?</h2>
+    <p>During its initial research stage, the scanner is designed to:</p>
+    <ul>
+      <li>Check a website's <code>robots.txt</code> instructions before accessing pages and respect applicable crawling restrictions.</li>
+      <li>Read the text of a public page selected by The Grant Farm.</li>
+      <li>Do so without logging into accounts, submitting forms, or attempting to access restricted areas.</li>
+    </ul>
+    <p>The scanner will not attempt to bypass crawling restrictions. If the website's instructions prohibit access by the scanner, or its crawling policy cannot be determined reliably, the affected pages will be marked <strong>Not assessed</strong>, with the reason documented.</p>
+
+    <h2>How it identifies itself</h2>
+    <pre><code>GrantFarmResearchScanner/0.1 (+https://grant-farm-landing.vercel.app/research-scanner)</code></pre>
+
+    <h2>Data handling</h2>
+    <p>In its initial testing stage, the scanner is designed to display extracted page text locally for review. During this initial testing stage, it will not save collected website content, submit it to an AI service, or use it to train AI models.</p>
+    <p>These practices may change as the tool develops. This page will be updated before its research or data-handling practices change.</p>
+
+    <h2>Website owners</h2>
+    <p>Website owners who have questions, concerns, corrections, or opt-out requests regarding the scanner may contact The Grant Farm using the business contact information below.</p>
+    <p>To request that the scanner not access your website's pages, you may add the following instruction to your <code>robots.txt</code> file:</p>
+    <pre><code>User-agent: GrantFarmResearchScanner
+Disallow: /</code></pre>
+    <p>The scanner is designed to follow this instruction. A <code>robots.txt</code> file is not a technical access control, so it does not block crawlers that ignore it.</p>
+
+    <h2>Contact</h2>
+    <p><strong>The Grant Farm</strong></p>
+    <p>Business email: <a href="mailto:jason@jasongrowthhub.com">jason@jasongrowthhub.com</a></p>
+
+    <p>Last updated: November 26, 2026</p>
+  </main>
+</body>
+</html>
